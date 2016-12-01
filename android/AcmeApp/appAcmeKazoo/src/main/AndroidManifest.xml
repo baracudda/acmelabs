@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.example.acme.kazoo"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+    >
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.MainActivity"
+        />
+
+        <service
+            android:name=".service.KazooService"
+            android:enabled="true"
+        />
+
+        <!-- BEGIN: Items related to the Android accounts and authentication -->
+
+        <activity
+            android:name=".server.auth.AuthenticationActivity"
+            android:label="@string/label_authenticating"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleTask"
+        />
+
+        <activity
+            android:name=".ui.ActivityAccountAuthLogin"
+            android:label="@string/account_auth_login_title"
+            android:launchMode="singleTask"
+        />
+
+        <activity
+            android:name=".ui.ActivityAccountAuthRegister"
+            android:label="@string/account_auth_register_title"
+        />
+
+        <activity
+            android:name=".account.manager.AuthPrefs"
+            android:title="@string/prefs_act_auth_settings_title"
+            android:launchMode="singleTask"
+        >
+            <intent-filter>
+                <category android:name="android.intent.category.PREFERENCE"/>
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".account.manager.AccountAuthenticator$ServiceAuthenticator"
+            android:exported="false"
+        >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator_meta"
+            />
+        </service>
+
+        <!-- END: Items related to the Android accounts and authentication -->
+
+    </application>
+
+</manifest>

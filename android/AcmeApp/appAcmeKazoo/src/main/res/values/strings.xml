@@ -1,0 +1,49 @@
+<resources>
+
+    <string name="app_name">Kazoo</string>
+    <string name="about_screen_app_name">Kazoo</string>
+    <string name="about_screen_app_version">Version %s</string>
+
+    <string name="action_login">Login&#8230;</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_settings">Settings&#8230;</string>
+
+    <string name="dialog_logout_title">Log out?</string>
+    <string name="dialog_logout_text">Log out of account [%s]?</string>
+
+    <string name="label_authenticating">Authenticating&#8230;</string>
+    <string name="label_main_title_card">Kazoo\n%s</string>
+    <string name="label_server_uri_unknown">(server unknown)</string>
+    <string name="label_server_uri_not_bound">%s (unbound)</string>
+    <string name="label_button_logout_of_account">Logout (%s)</string>
+
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="toast_cannot_authenticate">
+        App service has no HTTP client for authentication.
+    </string>
+
+    <string name="menu_label_auth_settings">Settings</string>
+    <string name="msg_input_required">input required</string>
+
+    <string name="account_auth_login_title">Credentials</string>
+    <string name="account_auth_login_hint_username">Username or Email address</string>
+    <string name="account_auth_login_hint_pw">Password</string>
+    <string name="account_auth_login_btn_submit">Sign in</string>
+    <string name="account_auth_login_label_register">New to %s?</string>
+    <string name="account_auth_login_fail">Incorrect username or password</string>
+
+    <string name="account_auth_register_title">Registration</string>
+    <string name="account_auth_register_hint_username">Username desired</string>
+    <string name="account_auth_register_hint_email">Email address</string>
+    <string name="account_auth_register_hint_pw">Password</string>
+    <string name="account_auth_register_hint_pw_check">Re-enter password</string>
+    <string name="account_auth_register_hint_reg_code">Registration Code</string>
+    <string name="account_auth_register_btn_submit">Register</string>
+    <string name="account_auth_register_msg_pw_check_fail">Password check failed to match</string>
+    <string name="account_auth_register_msg_registration_name_fail">Username already exists, please choose another</string>
+    <string name="account_auth_register_msg_registration_email_fail">Email already exists, please use another</string>
+    <string name="account_auth_register_msg_registration_code_fail">Permission denied!</string>
+
+</resources>

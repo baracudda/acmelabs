@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The filename pattern prefs_* is encouraged by the AppPrefsDebug class from the
+    androidBits library, from which SettingsActivity descends.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_height="wrap_content" android:layout_width="wrap_content"
+    >
+
+    <!-- Replaces the stock "about" preference from androidBits. -->
+    <com.blackmoonit.androidbits.widget.AboutAppPreference
+        android:icon="@mipmap/ic_settings_white_36dp"
+        android:title="@string/about_screen_app_name"
+        android:summary="@string/about_screen_app_version"
+        />
+
+</PreferenceScreen>

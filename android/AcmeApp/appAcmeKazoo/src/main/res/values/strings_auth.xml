@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_auth_name_in_android_manager">Kazoo</string>
+    <string name="account_auth_label_auth_token">Server token</string>
+    <string name="account_auth_type">com.example.acme.kazoo</string>
+    <string name="account_auth_validation_ping">AcMe</string>
+
+    <string name="class_for_activity_login">com.example.acme.kazoo.ui.ActivityAccountAuthLogin</string>
+
+</resources>

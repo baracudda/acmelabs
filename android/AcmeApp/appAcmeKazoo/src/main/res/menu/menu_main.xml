@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".ui.MainActivity"
+    >
+
+    <item android:id="@+id/menuitem_kazoo_login_logout"
+          android:title="@string/action_login"
+          android:icon="@mipmap/ic_https_white_36dp"
+          android:orderInCategory="1"
+          android:showAsAction="ifRoom"
+    />
+
+    <item android:id="@+id/menuitem_kazoo_settings"
+          android:title="@string/action_settings"
+          android:icon="@mipmap/ic_settings_white_36dp"
+          android:orderInCategory="999"
+          android:showAsAction="ifRoom"
+    />
+
+</menu>

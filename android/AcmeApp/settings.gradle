@@ -1,0 +1,4 @@
+include 'androidBits'
+project(':androidBits').projectDir = new File(lib_androidBits)
+
+include ':appAcmeKazoo'

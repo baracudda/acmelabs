@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="17dp"
+    android:paddingRight="17dp"
+    android:weightSum="1"
+>
+
+    <Button
+        android:id="@+id/account_auth_login_btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/account_auth_login_label_register"
+        android:textStyle="italic"
+        android:layout_weight="0.04"
+        android:layout_marginTop="10dp"
+            />
+    <EditText android:id="@+id/account_auth_login_edit_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/account_auth_login_hint_username"
+        android:inputType="text|textEmailAddress"
+        android:padding="10dp"
+        android:layout_weight="0.04"
+        android:layout_marginTop="40dp"
+    />
+    <EditText android:id="@+id/account_auth_login_edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:inputType="text|textPassword"
+        android:hint="@string/account_auth_login_hint_pw"
+        android:padding="10dp"
+        android:layout_weight="0.04"
+    />
+    <Button
+        android:id="@+id/account_auth_login_btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/account_auth_login_btn_submit"
+        android:layout_weight="0.04"
+        android:layout_marginTop="20dp"
+    />
+</LinearLayout>

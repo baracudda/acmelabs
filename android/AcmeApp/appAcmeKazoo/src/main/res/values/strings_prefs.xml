@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="prefgroup_server_title">Server Settings</string>
+    <string name="prefgroup_kazoo_general_key">prefgroups.general</string>
+    <string name="prefgroup_kazoo_general_title">Service Settings</string>
+
+    <string name="pref_service_enabled_key">pref.service.enabled</string>
+    <string name="pref_service_enabled_title">Service Enabled</string>
+    <string name="pref_service_enabled_summary">
+        Enable the background service that communicates with the web server.
+    </string>
+
+    <string name="pref_relay_freq_key">pref.relay.frequency</string>
+    <string name="pref_relay_freq_title">Polling Frequency</string>
+    <string name="pref_relay_freq_summary">
+        How often should Kazoo talk to the web service?
+    </string>
+    <string name="pref_relay_freq_default">0</string>
+
+    <string name="pref_key_server_api_version">pref_key_server_api_version</string>
+
+</resources>
