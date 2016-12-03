@@ -14,14 +14,32 @@
      so let us just add it so the IDE will shut up about it.
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content" android:layout_width="wrap_content"
-    android:key="account_settings"
-    android:title="@string/prefs_act_auth_settings_title"
-    android:summary="@string/prefs_act_auth_settings_summary"
+    android:layout_width="match_parent" android:layout_height="match_parent"
 >
-	<intent
-		android:action="android.authenticator.account.PREFS"
-		android:targetPackage="com.example.acme.kazoo.account.manager"
-		android:targetClass="com.example.acme.kazoo.account.manager.AuthPrefs">
-	</intent>
+
+    <PreferenceCategory
+        android:key="@string/prefgroup_kazoo_general_key"
+        android:title="@string/prefgroup_kazoo_general_title"
+    >
+        <!-- SwitchPreference is only available in Android 14+ -->
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_service_enabled_key"
+            android:title="@string/pref_service_enabled_title"
+            android:summary="@string/pref_service_enabled_summary"
+        />
+
+        <com.blackmoonit.androidbits.widget.SliderPreference
+            android:id="@+id/sliderpref_relay_freq"
+            android:key="@string/pref_relay_freq_key"
+            android:title="@string/pref_relay_freq_title"
+            android:dialogTitle="@string/pref_relay_freq_title"
+            android:dialogMessage="@string/pref_relay_freq_summary"
+            android:entries="@array/pref_relay_freq_labels"
+            android:entryValues="@array/pref_relay_freq_values"
+            android:defaultValue="@string/pref_relay_freq_default"
+        />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
