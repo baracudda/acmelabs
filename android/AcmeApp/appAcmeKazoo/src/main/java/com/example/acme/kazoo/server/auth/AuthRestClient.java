@@ -118,7 +118,9 @@ public class AuthRestClient extends BasicRetrofitClient<AuthRestAPI>
 			AuthRestAPI.MobileAuthTokenRequestByLogin aRequest)
 	{
 		try {
-			aRequest.auth_header_data = composeBroadwayAuthData(null).insert(0, "Broadway ").toString();
+			aRequest.auth_header_data = BroadwayAuthAccount.composeAuthorizationHeaderValue(
+					composeBroadwayAuthData(null)
+			);
 			return getImplementation().requestMobileAuthByLogin(aRequest).execute().body();
 		} catch (Exception | Error e) {
 			Log.e(TAG, "reqMobileAuthByLogin", e);
