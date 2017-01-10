@@ -1,14 +1,12 @@
 <?php
 namespace BitsTheater\actors ;
-use BitsTheater\actors\Understudy\BitsInstall as BaseActor ;
+use BitsTheater\actors\Understudy\BitsApiOnlyActor as BaseActor ;
 use BitsTheater\BrokenLeg ;
 use BitsTheater\costumes\APIResponse ;
 { //namespace begin
 
 class APIEndpoints extends BaseActor
 {
-	const SUBSTITUTE_NAME_TOKEN = 'NAME:' ;
-
     public function ajajPing()
     {
         $this->viewToRender( 'results_as_json' ) ;
@@ -18,25 +16,21 @@ class APIEndpoints extends BaseActor
     /**
     * POST server-side example.
     */
-    public function uploadDeviceInformation()
+    public function uploadWifiInformation()
     {
         if( ! $this->isAllowed( 'api', 'access' ) )
             throw BrokenLeg::toss( $this, 'FORBIDDEN' ) ;
         $v =& $this->scene ;
-        $theDeviceName = ( isset( $v->device_name ) ? $v->device_name : null ) ;
-        $theDeviceID = ( isset( $v->device_id ) ? $v->device_id : null ) ;
-        if( $theDeviceID == null && $theDeviceName != null )
-            $theDeviceID = self::SUBSTITUTE_NAME_TOKEN . $theDeviceName ;
-        if( $theDeviceID == null )
-            throw BrokenLg::toss( $this, 'MISSING_ARGUMENT', $theDeviceID ) ;
-        $saveResults = $this->saveUploadedDeviceInformation( $theDeviceID ) ;
+        $wifiFrequency = ( isset( $v->frequency ) ? $v->frequency : null ) ;
+        $wifiLinkSpeed = ( isset( $v->link_speed ) ? $v->link_speed : null ) ;
+        $saveResults = $this->saveUploadedWifiInformation( $wifiFrequency, $wifiLinkSpeed ) ;
         $v->results = APIResponse::resultsWithData( $saveResults ) ;
     }
     
-    protected function saveUploadedDeviceInformation( $aDeviceID )
+    protected function saveUploadedWifiInformation( $wifiFrequency, $wifiLinkSpeed )
     {
-        // Saves uploaded device information to database, throwing a BrokenLeg on errors.
-        return $aDeviceID ;
+        // Saves uploaded wifi information to database, throwing a BrokenLeg on errors.
+        return $wifiFrequency ;
     }
 } // end class
 

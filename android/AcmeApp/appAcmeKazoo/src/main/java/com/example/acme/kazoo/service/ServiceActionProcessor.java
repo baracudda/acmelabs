@@ -3,6 +3,8 @@ package com.example.acme.kazoo.service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -26,6 +28,8 @@ implements
     BroadwayRetrofitClient.BroadwayAuthListener,
     BroadwayRetrofitClient.RestEndpointListener
 {
+    static private final String TAG = ServiceActionProcessor.class.getSimpleName() ;
+
 //// Inner Classes /////////////////////////////////////////////////////////////
 
     /**
@@ -200,12 +204,68 @@ implements
                     .append( "]." )
                     .toString()
                 );
+
+            sendWifiInformation( m_ctx ) ;
         }
         else
             Log.d( LOG_TAG, "Account came back null." ) ;
 
         this.notifyServerAuthChanged( acct ) ;
     }
+
+    private ServiceActionProcessor sendWifiInformation( Context context )
+    {
+        // Access our API object.
+        BroadwayRetrofitClient<AcmeServerAPI> apiClient =
+                new BroadwayRetrofitClient<>(
+                        AcmeServerAPI.class, m_ctx, m_authinfo ) ;
+
+        // Verify access before use.
+        if( apiClient != null )
+        {
+            // Create our API request data object.
+            AcmeServerAPI.WifiInformation wifiInformation = new AcmeServerAPI.WifiInformation() ;
+
+            // Determine our currently connected Wi-Fi frequency and link speed, if any.
+            String frequency = "" ;
+            String linkSpeed = "" ;
+            WifiManager wifiMan = (WifiManager ) context.getSystemService( Context.WIFI_SERVICE ) ;
+            if (wifiMan != null)
+            {
+                WifiInfo wifiInfo = wifiMan.getConnectionInfo();
+                if ( wifiInfo != null )
+                {
+                    StringBuilder frequencyStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getFrequency() ) ) ;
+                    frequencyStringBuilder.append( " " ) ;
+                    frequencyStringBuilder.append( wifiInfo.FREQUENCY_UNITS ) ;
+                    frequency = frequencyStringBuilder.toString() ;
+
+                    StringBuilder linkSpeedStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getLinkSpeed() ) ) ;
+                    linkSpeedStringBuilder.append( " " ) ;
+                    linkSpeedStringBuilder.append( wifiInfo.LINK_SPEED_UNITS ) ;
+                    linkSpeed = linkSpeedStringBuilder.toString() ;
+                }
+            }
+            wifiInformation.frequency = frequency ;
+            wifiInformation.link_speed = linkSpeed ;
+
+            // TODO: Server API always returns null here.... hmmm.
+            AcmeServerAPI serverAPI = apiClient.getImplementation() ;
+
+            if( serverAPI != null )
+            {
+                // Send our wifi information to server via API endpoint.
+                AcmeServerAPI.APIResponse apiResponse = (AcmeServerAPI.APIResponse)
+                        serverAPI.uploadCurrentWifiInformation( wifiInformation ) ;
+                Log.i( TAG, apiResponse.toString() ) ;
+            } else {
+                Log.i( TAG, "Server API is null..." ) ;
+            }
+        }
+        return this ;
+    }
+
+
 
 //// BroadwayRetrofitClient.RestEndpointListener ///////////////////////////////
 

@@ -11,19 +11,19 @@ import retrofit2.http.POST;
  */
 public interface AcmeServerAPI
 {
-	@POST( "APIEndpoints/uploadDeviceInformation" )
-	Call<APIResponse> uploadDeviceInformation( @Body DeviceInformation request ) ;
+	@POST( "APIEndpoints/uploadCurrentWifiInformation" )
+	Call<APIResponse> uploadCurrentWifiInformation( @Body WifiInformation request ) ;
 
 	/**
 	 * Example class for storing device information for an API request.
 	 */
-	class DeviceInformation
+	class WifiInformation
 	{
-		@SerializedName( "device_id" )
-		public String device_id ;
+		@SerializedName( "frequency" )
+		public String frequency ;
 
-		@SerializedName( "device_name" )
-		public String device_name ;
+		@SerializedName( "link_speed" )
+		public String link_speed ;
 	}
 
 	/**
@@ -42,8 +42,20 @@ public interface AcmeServerAPI
 
 		public class Data
 		{
-			@SerializedName( "device_id" )
-			public String deviceID ;
+			@SerializedName( "frequency" )
+			public String frequency ;
+
+			@SerializedName( "link_speed" )
+			public String link_speed ;
+
+			@Override
+			public String toString()
+			{
+				return "Data{ " +
+						"frequency='" + frequency + '\'' +
+						", link_speed='" + link_speed + '\'' +
+						" }";
+			}
 		}
 
 		public static class ErrorReport
@@ -63,6 +75,15 @@ public interface AcmeServerAPI
 						.toString()
 						;
 			}
+		}
+
+		@Override
+		public String toString()
+		{
+			return "APIResponse{ " +
+					"status='" + status.toString() + '\'' +
+					", error=" + error.toString() +
+					" }" ;
 		}
 	}
 }
