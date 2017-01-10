@@ -1,9 +1,15 @@
 package com.example.acme.kazoo.server.auth;
 
+import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import org.jetbrains.annotations.Nullable;
+
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -73,7 +79,7 @@ public class AuthRestClient extends BasicRetrofitClient<AuthRestAPI>
 	public StringBuilder composeBroadwayAuthData(StringBuilder aStrBldr)
 	{
 		if( m_devinfo != null )
-			return m_devinfo.composeBroadwayAuthData( aStrBldr ) ;
+			return m_devinfo.composeBroadwayAuthData(aStrBldr);
 		else return null ;
 	}
 

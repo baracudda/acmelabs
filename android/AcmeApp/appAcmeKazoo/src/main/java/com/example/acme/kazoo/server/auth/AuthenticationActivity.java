@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.example.acme.kazoo.R;
 import com.example.acme.kazoo.server.retrofit.BroadwayRetrofitClient;
 import com.example.acme.kazoo.ui.ActivityAccountAuthLogin;
-import com.example.acme.kazoo.server.AcmeServerAPI;
+import com.example.acme.kazoo.server.api.AcmeServerAPI;
 import com.example.acme.kazoo.service.KazooService;
 
 /**

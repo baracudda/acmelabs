@@ -30,7 +30,7 @@ class APIEndpoints extends BaseActor
     protected function saveUploadedWifiInformation( $wifiFrequency, $wifiLinkSpeed )
     {
         // Saves uploaded wifi information to database, throwing a BrokenLeg on errors.
-        return $wifiFrequency ;
+        return array( 'frequency' => $wifiFrequency, 'link_speed' => $wifiLinkSpeed ) ;
     }
 } // end class
 

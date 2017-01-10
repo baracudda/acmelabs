@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.example.acme.kazoo"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -41,5 +41,6 @@ dependencies {
     /** Other Dependencies **/
     compile project(':androidBits')
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'org.jetbrains:annotations-java5:15.0'
 }

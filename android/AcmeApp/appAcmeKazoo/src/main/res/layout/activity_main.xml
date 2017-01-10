@@ -61,6 +61,15 @@
                     />
 
                 <Button
+                    android:id="@+id/btnSendWifiInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_button_send_wifi_info"
+                    android:drawableStart="@android:drawable/ic_media_play"
+                    android:onClick="sendWifiInfoButton"
+                    />
+
+                <Button
                     android:id="@+id/btnKazooMainSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

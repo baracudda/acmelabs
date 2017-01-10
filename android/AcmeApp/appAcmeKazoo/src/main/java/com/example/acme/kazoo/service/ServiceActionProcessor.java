@@ -9,14 +9,18 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.blackmoonit.androidbits.auth.FactoriesForBroadwayAuth;
 import com.blackmoonit.androidbits.utils.BitsStringUtils;
 import com.example.acme.kazoo.R;
+import com.example.acme.kazoo.server.api.SendWifiInfoResponse;
 import com.example.acme.kazoo.server.auth.AuthenticationActivity;
-import com.example.acme.kazoo.server.AcmeServerAPI;
+import com.example.acme.kazoo.server.api.AcmeServerAPI;
 import com.blackmoonit.androidbits.auth.BroadwayAuthAccount;
 import com.blackmoonit.androidbits.auth.IBroadwayAuthDeviceInfo;
 import com.example.acme.kazoo.server.retrofit.BroadwayRetrofitClient;
+import com.example.acme.kazoo.server.retrofit.ServerUnauthorizedException;
 
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -36,7 +40,6 @@ implements
      * Activities in the app which display any information about our server
      * connection should implement this interface so that the views may be
      * updated in real time.
-     * @since 1.0.16.16 (#90)
      */
     public interface LoginListener
     {
@@ -53,6 +56,76 @@ implements
          *  are not, in fact, connected
          */
         void onServerAuthChanged( BroadwayAuthAccount acct ) ;
+    }
+
+    protected class SendWifiInfoTask
+    implements Runnable
+    {
+        protected final ServiceActionProcessor m_proc =
+                ServiceActionProcessor.this ;
+
+        @Override
+        public void run()
+        {
+            // Verify access before use.
+            if( m_http != null )
+            {
+                // Create our API request data object.
+                AcmeServerAPI.WifiInformation wifiInformation = new AcmeServerAPI.WifiInformation() ;
+
+                // Determine our currently connected Wi-Fi frequency and link speed, if any.
+                String frequency = "" ;
+                String linkSpeed = "" ;
+                WifiManager wifiMan = (WifiManager ) m_proc.getContext().getSystemService( Context.WIFI_SERVICE ) ;
+                if (wifiMan != null)
+                {
+                    WifiInfo wifiInfo = wifiMan.getConnectionInfo();
+                    if ( wifiInfo != null )
+                    {
+                        StringBuilder frequencyStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getFrequency() ) ) ;
+                        frequencyStringBuilder.append( " " ) ;
+                        frequencyStringBuilder.append( wifiInfo.FREQUENCY_UNITS ) ;
+                        frequency = frequencyStringBuilder.toString() ;
+
+                        StringBuilder linkSpeedStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getLinkSpeed() ) ) ;
+                        linkSpeedStringBuilder.append( " " ) ;
+                        linkSpeedStringBuilder.append( wifiInfo.LINK_SPEED_UNITS ) ;
+                        linkSpeed = linkSpeedStringBuilder.toString() ;
+                    }
+                }
+                wifiInformation.frequency = frequency ;
+                wifiInformation.link_speed = linkSpeed ;
+
+                Log.d( TAG, frequency + " " + linkSpeed ) ;
+
+                AcmeServerAPI serverAPI = m_proc.m_http.getImplementation() ;
+
+                if( serverAPI != null )
+                {
+                    try
+                    { // Send our wifi information to server via API endpoint.
+                        SendWifiInfoResponse apiResponse = serverAPI
+                                .uploadCurrentWifiInformation( wifiInformation )
+                                .execute().body()
+                                ;
+                        Log.d( TAG, apiResponse.toString() ) ;
+                    }
+                    catch( ServerUnauthorizedException sux )
+                    {
+                        Log.e( TAG, "Server connection not authorized.", sux ) ;
+                        m_proc.logout().authenticate() ;
+                    }
+                    catch( IOException iox )
+                    {
+                        Log.e( TAG, "Could not parse response body.", iox ) ;
+                    }
+                }
+                else
+                {
+                    Log.i( TAG, "Server API implementation has not been generated." ) ;
+                }
+            }
+        }
     }
 
 //// Statics ///////////////////////////////////////////////////////////////////
@@ -162,6 +235,7 @@ implements
         m_ctx = ctx ;
         m_prefs = PreferenceManager.getDefaultSharedPreferences(m_ctx) ;
         m_prefs.registerOnSharedPreferenceChangeListener(this) ;
+        m_authinfo = FactoriesForBroadwayAuth.obtainDeviceInfo(m_ctx) ;
         this.initLoginListeners()
             .checkIsEnabledPref()
             .setRelayFrequency()
@@ -205,7 +279,7 @@ implements
                     .toString()
                 );
 
-            sendWifiInformation( m_ctx ) ;
+            sendWifiInformation() ;
         }
         else
             Log.d( LOG_TAG, "Account came back null." ) ;
@@ -213,59 +287,13 @@ implements
         this.notifyServerAuthChanged( acct ) ;
     }
 
-    private ServiceActionProcessor sendWifiInformation( Context context )
+    public ServiceActionProcessor sendWifiInformation()
     {
-        // Access our API object.
-        BroadwayRetrofitClient<AcmeServerAPI> apiClient =
-                new BroadwayRetrofitClient<>(
-                        AcmeServerAPI.class, m_ctx, m_authinfo ) ;
-
-        // Verify access before use.
-        if( apiClient != null )
-        {
-            // Create our API request data object.
-            AcmeServerAPI.WifiInformation wifiInformation = new AcmeServerAPI.WifiInformation() ;
-
-            // Determine our currently connected Wi-Fi frequency and link speed, if any.
-            String frequency = "" ;
-            String linkSpeed = "" ;
-            WifiManager wifiMan = (WifiManager ) context.getSystemService( Context.WIFI_SERVICE ) ;
-            if (wifiMan != null)
-            {
-                WifiInfo wifiInfo = wifiMan.getConnectionInfo();
-                if ( wifiInfo != null )
-                {
-                    StringBuilder frequencyStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getFrequency() ) ) ;
-                    frequencyStringBuilder.append( " " ) ;
-                    frequencyStringBuilder.append( wifiInfo.FREQUENCY_UNITS ) ;
-                    frequency = frequencyStringBuilder.toString() ;
-
-                    StringBuilder linkSpeedStringBuilder = new StringBuilder( String.valueOf( wifiInfo.getLinkSpeed() ) ) ;
-                    linkSpeedStringBuilder.append( " " ) ;
-                    linkSpeedStringBuilder.append( wifiInfo.LINK_SPEED_UNITS ) ;
-                    linkSpeed = linkSpeedStringBuilder.toString() ;
-                }
-            }
-            wifiInformation.frequency = frequency ;
-            wifiInformation.link_speed = linkSpeed ;
-
-            // TODO: Server API always returns null here.... hmmm.
-            AcmeServerAPI serverAPI = apiClient.getImplementation() ;
-
-            if( serverAPI != null )
-            {
-                // Send our wifi information to server via API endpoint.
-                AcmeServerAPI.APIResponse apiResponse = (AcmeServerAPI.APIResponse)
-                        serverAPI.uploadCurrentWifiInformation( wifiInformation ) ;
-                Log.i( TAG, apiResponse.toString() ) ;
-            } else {
-                Log.i( TAG, "Server API is null..." ) ;
-            }
-        }
+        // Conduct our network transaction on a background thread.
+        // This avoids the NetworkOnMainThreadException.
+        ( new Thread( new SendWifiInfoTask() ) ).start() ;
         return this ;
     }
-
-
 
 //// BroadwayRetrofitClient.RestEndpointListener ///////////////////////////////
 
