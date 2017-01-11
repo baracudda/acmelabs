@@ -30,7 +30,6 @@ implements Interceptor
 	 * the output of this implementation and append additional fields to the
 	 * buffer before it is composed in {@link #intercept}.
 	 * @return a string builder with the initial fields of an auth header
-	 * @since 5.3.11
      */
 	protected StringBuilder composeAuthorizationHeader()
 	{
