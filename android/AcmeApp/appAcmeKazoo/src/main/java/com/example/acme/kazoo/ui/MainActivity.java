@@ -1,5 +1,6 @@
 package com.example.acme.kazoo.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,8 +9,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,6 +145,11 @@ implements ServiceActionProcessor.LoginListener
     {
         super.onResume() ;
         this.setOrientation();
+        if( ContextCompat.checkSelfPermission( this, Manifest.permission.READ_PHONE_STATE ) != PackageManager.PERMISSION_GRANTED )
+        {
+            ActivityCompat.requestPermissions( this,
+                    new String[] { Manifest.permission.READ_PHONE_STATE }, 0 ) ;
+        }
     }
 
     @Override
@@ -257,6 +266,16 @@ implements ServiceActionProcessor.LoginListener
     {
         Intent sig = new Intent( this, SettingsActivity.class ) ;
         this.startActivity( sig ) ;
+    }
+
+    /**
+     * Sends a request to the wifi info endpoint on the server.
+     * @param w the view that triggered the event (ignored)
+     */
+    public void sendWifiInfoButton( View w )
+    {
+        if( mService != null )
+            mService.getProcessor().sendWifiInformation() ;
     }
 
     /**

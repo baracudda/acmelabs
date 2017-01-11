@@ -3,7 +3,6 @@ package com.example.acme.kazoo.server.auth;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import org.jetbrains.annotations.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +12,8 @@ import com.blackmoonit.androidbits.auth.FactoriesForBroadwayAuth;
 import com.blackmoonit.androidbits.auth.IBroadwayAuthDeviceInfo;
 import com.example.acme.kazoo.R;
 import com.example.acme.kazoo.server.retrofit.BasicRetrofitClient;
+
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides an API for auth exchange with the remote server.

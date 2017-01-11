@@ -16,6 +16,7 @@
     <string name="label_server_uri_unknown">(server unknown)</string>
     <string name="label_server_uri_not_bound">%s (unbound)</string>
     <string name="label_button_logout_of_account">Logout (%s)</string>
+    <string name="label_button_send_wifi_info">Send WiFi Info</string>
 
     <string name="title_activity_login">Login</string>
     <string name="title_activity_settings">Settings</string>

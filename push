@@ -1,0 +1,116 @@
+#!/bin/bash
+# Pushes the server code to a remote instance.
+
+function DiscoverLocalAcmePath
+{
+  if [[ ! -d $ACME_LOCAL_PATH ]] ; then
+    if [[ ! -z $ACME_LOCAL_PATH ]] ; then
+      echo "Invalid ACME local (source) path [$ACME_LOCAL_PATH]."
+      export ACME_LOCAL_PATH=
+    fi
+  fi
+  while [[ -z $ACME_LOCAL_PATH ]] ; do
+    read -e -p "Enter local (source) path for development: " MAYBE_ACME_PATH
+    MAYBE_ACME_EXPANDED_PATH=${MAYBE_ACME_PATH/#\~/$HOME}
+    if [[ -d "$MAYBE_ACME_EXPANDED_PATH" ]] ; then
+      export ACME_LOCAL_PATH=$MAYBE_ACME_EXPANDED_PATH
+    fi
+  done
+  echo "Local (source) path:  [$ACME_LOCAL_PATH]"
+}
+
+function DiscoverLocalBitsTheaterPath
+{
+  if [[ ! -d $BITS_LOCAL_PATH ]] ; then
+    if [[ ! -z $BITS_LOCAL_PATH ]] ; then
+      echo "Invalid BitsTheater local (source) path [$BITS_LOCAL_PATH]."
+      export BITS_LOCAL_PATH=
+    fi
+  fi
+  while [[ -z $BITS_LOCAL_PATH ]] ; do
+    read -e -p "Enter local (source) path for BitsTheater: " MAYBE_BITS_PATH
+    MAYBE_BITS_EXPANDED_PATH=${MAYBE_BITS_PATH/#\~/$HOME}
+    if [[ -d "$MAYBE_BITS_EXPANDED_PATH" ]] ; then
+      export BITS_LOCAL_PATH=$MAYBE_BITS_EXPANDED_PATH
+    fi
+  done
+  echo "Local BitsTheater:    [$BITS_LOCAL_PATH]"
+}
+
+function DiscoverHostLogin
+{
+  while [[ -z $ACME_SSH_HOST_LOGIN ]] ; do
+    read -e -p "Enter SSH login (user@host): " ACME_SSH_HOST_LOGIN
+    export ACME_SSH_HOST_LOGIN
+  done
+  echo "SSH user/host:        [$ACME_SSH_HOST_LOGIN]"
+}
+
+function DiscoverRemotePath
+{
+  while [[ -z $ACME_REMOTE_PATH ]] ; do
+    read -e -p "Enter remote (target) path for deployment: " ACME_REMOTE_PATH
+    export ACME_REMOTE_PATH
+  done
+  echo "Target (remote) path: [$ACME_REMOTE_PATH]"
+}
+
+# Start main script
+
+if [[ "$1" == "" ]] ; then
+  echo "No target specified."
+  exit 1
+fi
+DiscoverHostLogin
+DiscoverRemotePath
+if [[ "$1" == "bits" ]] ; then # push the BitsTheater library instead of ACME.
+  DiscoverLocalBitsTheaterPath
+  echo "NOTE: This might overwrite customized files in the ACME server repo."
+  echo "You should execute a 'push all' after this operation is complete."
+  read -s -n 1 -p "Proceed? [Y/n] "
+  if [[ $REPLY =~ ^[Nn]$ ]] ; then
+   exit 2
+  fi
+  echo -e "\n"
+  echo "Pushing local BitsTheater library..."
+  scp -r $BITS_LOCAL_PATH/* $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/
+  # .htaccess is not picked up by "*" and must be copied explicitly.
+  scp $BITS_LOCAL_PATH/.htaccess $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/
+  exit 0
+fi
+DiscoverLocalAcmePath
+read -s -n 1 -p "Proceed? [Y/n] "
+if [[ $REPLY =~ ^[Nn]$ ]] ; then
+ exit 2
+fi
+echo -e "\n"
+if [[ "$1" == "all" ]] ; then
+  echo "Pushing EVERYTHING!"
+  scp -r $ACME_LOCAL_PATH/* $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/
+  # .htaccess is not picked up by "*" and must be copied explicitly.
+  if [[ -f $ACME_LOCAL_PATH/.htaccess ]] ; then
+    scp $ACME_LOCAL_PATH/.htaccess $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/
+  fi
+  exit 0
+fi
+for p in $@ ; do # process parameters as filenames or patterns
+  files=""
+  if [[ $p =~ ^.*\/.*$ ]] ; then # it's an absolute/qualified filename
+    echo "Exact file:        [$p]"
+    files=$(find $ACME_LOCAL_PATH -path "$p" -printf "%P\n")
+  else # it's a filename pattern to be matched
+    echo "Pattern:           [$p]"
+    files=$(find $ACME_LOCAL_PATH -name "$p" -printf "%P\n")
+  fi
+  for f in $files ; do # push each matched dir or file
+    if [[ -d $ACME_LOCAL_PATH/$f ]] ; then # copy an entire directory
+      echo "Matched directory: [$f]"
+      scp -r $ACME_LOCAL_PATH/$f $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/$(dirname $f)
+    else # copy a single file
+      echo "Matched file:      [$f]"
+      scp $ACME_LOCAL_PATH/$f $ACME_SSH_HOST_LOGIN:$ACME_REMOTE_PATH/$f
+    fi
+  done
+done
+exit 0
+
