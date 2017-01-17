@@ -278,8 +278,6 @@ implements
                     .append( "]." )
                     .toString()
                 );
-
-            sendWifiInformation() ;
         }
         else
             Log.d( LOG_TAG, "Account came back null." ) ;
