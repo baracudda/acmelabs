@@ -40,6 +40,10 @@ class Website extends BaseResources
 			));
 
 		//$this->res_array_merge($this->list_credits_html, $this->list_credits_html_more);
+
+		$this->res_array_merge($this->css_load_list, array(
+				'site.css' => BITS_RES.'/style',
+		));
 	}
 
 	/**

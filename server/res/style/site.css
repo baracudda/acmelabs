@@ -1,0 +1,70 @@
+@CHARSET "UTF-8";
+
+/*
+ * Site CSS Styles & Overrides
+ */
+ 
+/*
+ dark bkgd: rgb(102, 102, 102)               black-ish
+ text on dark bkgd: #CCC				     light-grey
+ highlight text on dark bkgd: red            red
+ 
+ light bkgd: white                           white
+ text on light bkgd: rgb(102, 102, 102)      black-ish
+ highlight text on light bkgd: red           red
+*/ 
+
+/*
+ * BITS overrides.
+ */
+#container-header img.logo {
+	height:72px;
+	width:144px;
+	border:4;
+}
+
+#container-footer {
+	font-size: 12px;
+  	text-align: center;
+  	border-top: solid 1px #000000;
+  	padding: 5px;
+  	width: 100%;
+  	float: left;
+	background: Black;
+	color: #CCC;
+}
+
+#container-footer a:active {
+	color: #CCC;
+}
+
+#container-footer a:link, #container-footer a:visited {
+	color: #CCC;
+}
+
+/*
+ * Bootstrap overrides.
+ */
+.logo {
+	float: none;
+}
+
+.panel-info > .panel-heading {
+	background: #EEE;
+}
+
+/*
+ * CSS OVERRIDES & Originals
+ */
+.panel-title, .panel-heading {
+	height: 45px;
+}
+
+.help-inline {
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: #737373;
+  vertical-align: top;
+  font-weight: normal;
+}
